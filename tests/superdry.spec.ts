@@ -1,34 +1,27 @@
 import {test, expect} from '@playwright/test';
+import { Superdry } from './pages/superdry.page';
+let superdry: Superdry;
+
 test.beforeEach(async ({page}) => {
-    await page.goto("https://www.superdry.com/");
-    const acceptCookies = page.getByRole('button', {name:"Accept All Cookies"});
-    if(await acceptCookies.isVisible()){
-    await acceptCookies.click();
-    }
-    expect(acceptCookies).not.toBeVisible()
+   superdry = new Superdry(page);
+
+    await superdry.goTo('https://www.superdry.com/');
+    await superdry.cookieAccept();
 })
 
-test('Go to PDP', async ({page}) => {
-  await page.goto("https://www.superdry.com/");
-await page.locator('#men-gb').hover();
-await page.locator('.dropdown-menu .sub-column #tops-gb').click();
+test('Add to bag', async ({page}) => {
+ await superdry.goTo('https://www.superdry.com/');
 
-const firstProduct = page.locator('.product-tile').first()
-expect(firstProduct).toBeVisible();
-await firstProduct.click();
+ //Navigate to PDP
+await superdry.mainMenuMens.hover();
+await superdry.mensTops.click();
+expect(superdry.firstProduct).toBeVisible();
+await superdry.firstProduct.click();
 
-const firstAvailableSize = page.locator('.custom-product-size-button:not(.notify-me-available)').first()
-
-await firstAvailableSize.click();
-await expect(firstAvailableSize).toContainClass('selected');
-
-const buyNowButton = page.getByRole('button', {name: "Add to bag", exact: true})
-
-await buyNowButton.click();
-
-const modal = page.locator("#addToBag .modal-dialog")
-const addToBagModalText = modal.locator(".add-to-bag-body");
-
-await expect(modal).toBeVisible();
-await expect(addToBagModalText).toHaveText('Added to bag', {ignoreCase: true})
+//Add to bag
+await superdry.firstAvailableSize.click();
+await expect(superdry.firstAvailableSize).toContainClass('selected');
+await superdry.buyNowButton.click();
+await expect(superdry.modal).toBeVisible();
+await expect(superdry.addToBagModalText).toHaveText('Added to your bag', {ignoreCase: true})
 })
