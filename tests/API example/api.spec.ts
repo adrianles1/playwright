@@ -5,21 +5,16 @@ test("GET - retrieve all posts", async ({request}) =>{
   let baseUrl = 'https://jsonplaceholder.typicode.com/posts'
     const response = await request.get(baseUrl);
 
-    //Status
+  
     expect(response.status()).toBe(200);
 
     const body = await response.json();
 
-    //Check there are items
     expect(body.length).toBeGreaterThan(0);
 
-    //Check it's an array
     expect(Array.isArray(body)).toBe(true);
 
-    //Properties
-    
-      //Header validations
-      const headers = response.headers();
+          const headers = response.headers();
       expect(headers['content-type']).toContain('application/json');
 })
 
@@ -59,7 +54,6 @@ test("POST", async({request}) => {
 
  expect(response.status()).toBe(201)
 
- //Claude - check all fields match
  //expect(body).toMatchObject(newBody);
 expect(body.userId).toBe(newBody.userId)
 expect(body.title).toBe(newBody.title)
