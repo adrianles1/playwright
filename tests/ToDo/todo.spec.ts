@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-import { TodoPage } from './pages/todo.page';
+import { TodoPage } from '../pages/ToDoApp/todo.page';
 
 test.describe('To Do App tests', () => {
     let todoPage: TodoPage;     
